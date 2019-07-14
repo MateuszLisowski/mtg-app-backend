@@ -2,7 +2,7 @@ const Card = require("../models/card");
 
 exports.getCards = async (req, res) => {
   try {
-    const cards = await Card.find();
+    const cards = await Card.findOne({ name: req.body.name });
     res.json(cards);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -10,21 +10,37 @@ exports.getCards = async (req, res) => {
 };
 
 exports.postCard = async (req, res) => {
-  const card = new Card({
-    name: req.body.name,
-    types: req.body.types,
-    keywords: req.body.keywords,
-    text: req.body.text,
-    tournamentLegal: req.body.tournamentLegal,
-    attack: req.body.attack,
-    defense: req.body.defense
-  });
+  const {
+    name,
+    types,
+    keywords,
+    text,
+    tournamentLegal,
+    attack,
+    defense
+  } = req.body;
+
   try {
+    const isCardInDatabase = await Card.findOne({ name });
+    if (isCardInDatabase) {
+      res.status(400).json({
+        message: `Card with ${name} name is currently in database`,
+        status: 400
+      });
+    }
+
+    const card = new Card({
+      name,
+      types,
+      keywords,
+      text,
+      tournamentLegal,
+      attack,
+      defense
+    });
     const newCard = await card.save();
     res.status(201).json(newCard);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({ message: err.message, status: 400 });
   }
 };
-
-

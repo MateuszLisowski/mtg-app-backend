@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const cardSchema = new Schema({
@@ -23,13 +23,11 @@ const cardSchema = new Schema({
     required: true
   },
   attack: {
-    type: Number,
-    required: true
+    type: Number
   },
   defense: {
-    type: Number,
-    required: true
+    type: Number
   }
 });
 
-module.exports = mongoose.model('User', cardSchema);
+module.exports = mongoose.model("User", cardSchema);
