@@ -56,3 +56,38 @@ exports.postCard = async (req, res) => {
     res.status(400).json({ message: err.message, status: 400 });
   }
 };
+
+exports.updateCard = async (req, res) => {
+  try {
+    const {
+      foundCardId,
+      name,
+      types,
+      keywords,
+      text,
+      tournamentLegal,
+      attack,
+      defense
+    } = req.body;
+
+    const updatedCard = await Card.findOneAndUpdate(
+      { _id: foundCardId },
+      { name, types, keywords, text, tournamentLegal, attack, defense }
+    );
+
+    if (!updatedCard) {
+      res.status(400).json({
+        message: "Something went wrong during card updating. Please try again",
+        status: 400
+      });
+    }
+
+    res.status(200).json({
+      updatedCard,
+      status: 200,
+      message: `Card ${name} info updated`
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
