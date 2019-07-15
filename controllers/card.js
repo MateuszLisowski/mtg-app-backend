@@ -1,9 +1,21 @@
 const Card = require("../models/card");
 
-exports.getCards = async (req, res) => {
+exports.getCard = async (req, res) => {
   try {
-    const cards = await Card.findOne({ name: req.body.name });
-    res.json(cards);
+    const card = await Card.findOne({ name: req.params.cardName });
+
+    if (!card) {
+      res.status(400).json({
+        message: `Card ${req.params.cardName} not found`,
+        status: 400
+      });
+    }
+
+    res.status(200).json({
+      card,
+      status: 200,
+      message: `Card ${req.params.cardName} found in database`
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
