@@ -4,10 +4,15 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 const cardRouter = require("./routes/card");
+require('dotenv').config()
+
+const { MONGO_USER, MONGO_PASSWORD, MONGO_DEFAULT_DATABASE } = process.env;
+
+console.log(MONGO_USER || 'r', MONGO_PASSWORD, MONGO_DEFAULT_DATABASE)
 
 mongoose
   .connect(
-    "mongodb+srv://mateusz:g2ssKmYNyl28Ux1i@nodefirstapp-y7wne.mongodb.net/firstApp?retryWrites=true&w=majority",
+    `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@nodefirstapp-y7wne.mongodb.net/${MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority`,
     { useNewUrlParser: true }
   )
   .then(result => {
@@ -21,15 +26,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
-    'Access-Control-Allow-Methods',
-    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
   );
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
 
 app.use("/card", cardRouter);
 
-app.listen(3000, () => console.log("Server Started"));
+app.listen(process.env.PORT || 3000, () => console.log("Server Started"));

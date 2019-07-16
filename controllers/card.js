@@ -30,13 +30,9 @@ exports.getCards = async (req, res) => {
         return obj;
       }, {});
 
-      console.log(searchCriterias)
-
     const cards = await Card.find({
       ...searchCriterias
     });
-
-    console.log(cards)
 
     if (!cards.length) {
       res.status(400).json({
