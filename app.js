@@ -4,11 +4,9 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 const cardRouter = require("./routes/card");
-require('dotenv').config()
+require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
 
 const { MONGO_USER, MONGO_PASSWORD, MONGO_DEFAULT_DATABASE } = process.env;
-
-console.log(MONGO_USER || 'r', MONGO_PASSWORD, MONGO_DEFAULT_DATABASE)
 
 mongoose
   .connect(
