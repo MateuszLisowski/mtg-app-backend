@@ -12,7 +12,6 @@ const cardSchema = new Schema({
   },
   keywords: {
     type: String,
-    required: true
   },
   text: {
     type: String,

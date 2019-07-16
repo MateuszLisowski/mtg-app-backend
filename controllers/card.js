@@ -9,13 +9,47 @@ exports.getCard = async (req, res) => {
         message: `Card ${req.params.cardName} not found`,
         status: 400
       });
+    } else {
+      res.status(200).json({
+        card,
+        status: 200,
+        message: `Card ${req.params.cardName} found in database`
+      });
     }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-    res.status(200).json({
-      card,
-      status: 200,
-      message: `Card ${req.params.cardName} found in database`
+exports.getCards = async (req, res) => {
+  try {
+    const searchCriterias = Object.entries(JSON.parse(req.params.cardInfo))
+      .filter(val => (val[0] === "tournamentLegal" ? true : Boolean(val[1])))
+      .reduce((obj, item) => {
+        obj[item[0]] = item[1];
+        return obj;
+      }, {});
+
+      console.log(searchCriterias)
+
+    const cards = await Card.find({
+      ...searchCriterias
     });
+
+    console.log(cards)
+
+    if (!cards.length) {
+      res.status(400).json({
+        message: `Card with this criteria not found`,
+        status: 400
+      });
+    } else {
+      res.status(200).json({
+        cards,
+        status: 200,
+        message: `Cards found in database`
+      });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
